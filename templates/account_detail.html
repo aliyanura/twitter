@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+
+<div class="card" style="width: 18rem;">
+    <img src="" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{ user.username }}</h5>
+      <p class="card-text">
+          <strong>First name:</strong>
+            {% if user.first_name %}
+            <small>{{ user.first_name }}</small>
+            {% else %}
+            <small>no</small>
+            {% endif%}
+      </p>
+      <p class="card-text">
+        <strong>Last name:</strong>
+        {% if user.last_name %}
+        <small>{{ user.last_name }}</small>
+        {% else %}
+        <small>no</small>
+        {% endif%}
+    </p>
+    <p class="card-text">
+        <strong>Email:</strong>
+        {% if user.email %}
+        <small>{{ user.email }}</small>
+        {% else %}
+        <small>no</small>
+        {% endif%}
+    </p>
+    {% if request.user is user %}
+    <a href="{% url 'account_edit'%}" class="btn btn-primary btn-sm">Edit profile</a>
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}

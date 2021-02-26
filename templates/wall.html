@@ -13,7 +13,7 @@
           <tr>
               {% if target.target.id == post.created_by.id %}
             <td>
-                {{ post.created_by }}
+                <a href="{% url 'profile' post.created_by.pk %}">{{ post.created_by }}</a>
             </td>
             <td>
              <em>{{ post.message }}</em>

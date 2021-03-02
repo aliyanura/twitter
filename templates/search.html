@@ -3,6 +3,14 @@
 
 {% block content %}
     {% for user in users%}
-        {{ user.username }}
+    <div class="card">
+        <div class="card-header">
+        </div>
+        <div class="card-body">
+          <blockquote class="blockquote mb-0">
+            <a href="{% url 'account_detail' user.pk %}">{{ user.username }}</a>
+          </blockquote>
+        </div>
+      </div>
     {% endfor %}
 {% endblock %}

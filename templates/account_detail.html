@@ -6,7 +6,9 @@
 {% block content %}
 <div class="card w-50" style="width: 18rem;">
     <div class="card-body">
+      {% if request.user.id is user.id %}
       <a href="{% url 'add_foto' user.pk %}" class="btn btn-primary btn-sm">Add foto</a>
+      {% endif %}
       {% for image in images %}
         {% if user.id is image.owner.id %}
           <div class="">
@@ -41,20 +43,31 @@
         {% endif%}
     </p>
     {% if request.user.id is user.id %}
-    <a href="{% url 'account_edit'%}" class="btn btn-primary btn-sm">Edit profile</a>
-    {% else %}
-    <a href="#" class="btn btn-primary btn-sm">Follow</a>
+      <a href="{% url 'account_edit'%}" class="btn btn-primary btn-sm">Edit profile</a>
     {% endif %}
+      {% if foll %}
+        <form method="post">
+          {% csrf_token%}
+          <button type='submit' class="btn btn-primary btn-sm">Unfollow</button>
+        </form>
+      {% elif user.id != request.user.id and not foll %}
+      <form method="post">
+        {% csrf_token%}
+        <button type='submit' class="btn btn-primary btn-sm">Follow</button>
+      </form>
+      {% endif %}
     </div>
   </div>
 
   <table class="table">
     <tbody>
+      {% if request.user.id is user.id %}
       <a href="{% url 'post_add' request.user.pk %}" class='btn btn-info mb-3 mt-3'>New post</a>
+      {% endif %}
       {% for post in posts %}
         <tr>
             {% if user.id == post.created_by.id %}
-            <div class="card mb-4">
+            <div class="card mb-4 mt-3">
               <a href="{% url 'post_detail' post.created_by.pk post.pk %}" class='' style='text-decoration: none; color: black;'>
                 <div class="card-header">
                   {{ post.created_at }}

@@ -20,6 +20,20 @@ def account_detail(request, pk):
     user = get_object_or_404(User, pk=pk)
     posts = Post.objects.all()
     images = Image.objects.all()
+    follows = Following.objects.all()
+    try:
+        foll = Following.objects.get(target=user, follower=request.user)
+    except:
+        pass
+    if request.method == 'POST':
+        try:
+            foll = Following.objects.get(target=user, follower=request.user)
+            foll.delete()
+            print('hello')
+        except:
+            foll = Following.objects.create(target=user, follower=request.user)
+            print('bye')
+        return redirect('account_detail', pk=pk)
     return render(request, 'account_detail.html', locals())
 
 @login_required 

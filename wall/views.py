@@ -127,7 +127,7 @@ def add_foto(request, pk):
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
-            obj.owner = request.user
+            obj.owner = user
             obj.save()
             return redirect('account_detail', pk)
     else:
@@ -144,3 +144,13 @@ def change_foto(request, pk, image_pk):
     else:
         form = ImageForm(instance=image)
     return render(request, 'change_foto.html', locals())
+
+
+def follow(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    follow = Following.objects.get(target=user, follower=request.user)
+    if follow:
+        follow.delete()
+    else:
+        follow = Following.objects.create(target=user, follower=request.user)
+    return redirect('account_detail', pk=pk)

@@ -12,12 +12,20 @@
         {% for post in posts %}
           <tr>
               {% if target.target.id == post.created_by.id %}
-            <td>
-                <a href="{% url 'profile' post.created_by.pk %}">{{ post.created_by }}</a>
-            </td>
-            <td>
-             <em>{{ post.message }}</em>
-            </td>
+              <div class="card mb-4">
+                <a href="{% url 'post_detail' post.created_by.pk post.pk %}" class='' style='text-decoration: none; color: black;'>
+                  <div class="card-header">
+                    {{ post.created_at }}
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">{{ post.created_by }}</h5>
+                    <p class="card-text">{{ post.message|truncatewords:15 }}</p>
+                  </div>
+                  {% if post.image %}
+                    <img src="{{ post.image.url }}"  alt="..." style='width: 200px;' class='m-4'>
+                  {% endif %}
+                </a>
+              </div>
             {% endif %}
           </tr>
         {% endfor %}
@@ -25,4 +33,5 @@
         {% endfor %}
       </tbody>
   </table>
+  {% include "includes/pagination.html" with page=posts %}
 {% endblock %}

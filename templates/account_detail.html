@@ -4,10 +4,17 @@
 {% block title %}{{ user.username }}{% endblock %}
 
 {% block content %}
-
-<div class="card" style="width: 18rem;">
-    <img src="" class="card-img-top" alt="...">
+<div class="card w-50" style="width: 18rem;">
     <div class="card-body">
+      <a href="{% url 'add_foto' user.pk %}" class="btn btn-primary btn-sm">Add foto</a>
+      {% for image in images %}
+        {% if user.id is image.owner.id %}
+          <div class="">
+            <img src="{{ image.image.url }}" class="d-block w-100" alt="...">
+            <a href="{% url 'change_foto' image.owner.pk image.pk %}" class="btn btn-primary btn-sm">Change foto</a>
+          </div>
+        {% endif %}
+      {% endfor %}
       <h5 class="card-title">{{ user.username }}</h5>
       <p class="card-text">
           <strong>First name:</strong>
@@ -33,9 +40,37 @@
         <small>no</small>
         {% endif%}
     </p>
-    {% if request.user is user %}
+    {% if request.user.id is user.id %}
     <a href="{% url 'account_edit'%}" class="btn btn-primary btn-sm">Edit profile</a>
+    {% else %}
+    <a href="#" class="btn btn-primary btn-sm">Follow</a>
     {% endif %}
     </div>
   </div>
+
+  <table class="table">
+    <tbody>
+      <a href="{% url 'post_add' request.user.pk %}" class='btn btn-info mb-3 mt-3'>New post</a>
+      {% for post in posts %}
+        <tr>
+            {% if user.id == post.created_by.id %}
+            <div class="card mb-4">
+              <a href="{% url 'post_detail' post.created_by.pk post.pk %}" class='' style='text-decoration: none; color: black;'>
+                <div class="card-header">
+                  {{ post.created_at }}
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title">{{ post.created_by }}</h5>
+                  <p class="card-text">{{ post.message|truncatewords:15 }}</p>
+                </div>
+                {% if post.image %}
+                  <img src="{{ post.image.url }}"  alt="..." style='width: 200px;'>
+                {% endif %}
+              </a>
+            </div>
+          {% endif %}
+        </tr>
+      {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

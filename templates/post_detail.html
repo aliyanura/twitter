@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{ post.created_by }}{% endblock %}
+
+{% block content %}
+<table class="table">
+    <tbody>
+        <tr>
+            <div class="card mb-4">
+                <div class="card-header">
+                  {{ post.created_at }}
+                  {% if request.user.id is post.created_by.id %}
+                    <a href="{% url 'post_edit' post.created_by.pk post.pk %}" class='ml-5 btn btn-light' style="width: 18rem;">Edit</a>
+                    <a href="{% url 'post_delete' post.created_by.pk post.pk %}" class='ml-5 btn btn-danger' style="width: 18rem;">Delete</a>
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'account_detail' post.created_by.pk %}"><h5 class="card-title">{{ post.created_by }}</h5></a>
+                  <p class="card-text">{{ post.message|truncatewords:15 }}</p>
+                  {% if post.image %}
+                    <img src="{{ post.image.url }}"  alt="..." style='width: 400px;'>
+                  {% endif %}
+                </div>
+                <div class="card-footer text-muted ">
+                    <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="#" class='btn btn-info'>Retweet</a></li>
+                        <li class="breadcrumb-item mr-3 ml-3 mb-8">
+                        <form method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class='btn btn-danger' value='{{ post.likes_count }} Likes'>
+                        </form>
+                        </li>
+                    </ol>
+                    </nav>
+                </div>
+            </div>
+        </tr>
+    </tbody>
+</table>
+    <h4 class='mb-4'>
+        {{ comments.count }} comment
+    </h4>
+{% for comment in comments %}
+    <div class="card w-50 mb-3">
+        <div class="card-header">
+            {{ comment.created_by }}
+        </div>
+        <div class="card-body">
+          <blockquote class=" mb-0">
+            <p>{{ comment.message|linebreaks }}</p>
+            <small>created at <cite title="Source Title">{{ comment.created_at }}</cite></small >
+          </blockquote>
+        </div>
+        <div class="card-footer text-muted">
+            {% if request.user.id is comment.created_by.id %}
+            <a href="{% url 'comment_edit' post.pk comment.pk %}" class='ml-3 mr-3 btn btn-light'>Edit</a> <a href="{% url 'comment_delete' post.pk comment.pk %}" class='ml-3 mr-3 btn btn-light'>Delete</a>
+            {% endif %}
+        </div>
+      </div>
+{% empty %}
+    <p>There are no comments yet.</p>
+{% endfor %}
+
+{% if new_comment %}
+    <h2>Your comment has been added.</h2>
+{% else %}
+    <h4 class='mt-3 mb-3'>Add new comment.</h4>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-floating">
+            {{ comment_form.as_p }}
+        </div>
+        <p><input type="submit" value='Add'></p>
+    </form>
+{% endif %}
+{% endblock %}

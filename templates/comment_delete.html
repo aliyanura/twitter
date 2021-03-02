@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ comment.created_by|title }}
+{% endblock %}
+
+{% block content %}
+    <form action="{% url 'comment_delete' comment.post.pk comment.pk %}" method='post'>
+        {% csrf_token %}
+        <h3>Are you sure you want to delete {{ comment.message|title }}<b>comment</b>?</h3>
+        <a href="{% url 'post_detail' comment.post.created_by.pk comment.post.pk %}" class='btn btn-light'>Censel</a> 
+        <button type='submit' name='button' class='btn btn-danger'>Delete</button>
+
+    </form>
+{% endblock %}

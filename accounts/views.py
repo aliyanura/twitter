@@ -1,8 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
 from .forms import *
 from django.contrib.auth.decorators import login_required
+from wall.models import *
 
 def signup(request):
     if request.method=='POST':
@@ -15,9 +16,10 @@ def signup(request):
         form = SignUpForm()
     return render(request, 'signup.html', locals())
 
-def account_detail(request):
-    # form = AccountChangeForm(instance=request.user)
-    user = request.user
+def account_detail(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    posts = Post.objects.all()
+    images = Image.objects.all()
     return render(request, 'account_detail.html', locals())
 
 @login_required 

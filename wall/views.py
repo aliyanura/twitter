@@ -90,7 +90,7 @@ def comment_delete(request, pk, comment_pk):
 def post_add(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.created_by = user
@@ -124,10 +124,9 @@ def post_delete(request, pk, post_pk):
 def add_foto(request, pk):
     user = get_object_or_404(User, pk=pk)
     if request.method == 'POST':
-        form = ImageForm(data=request.POST)
+        form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
-            obj = Image()
-            obj.image = form.cleaned_data['image']
+            obj = form.save(commit=False)
             obj.owner = request.user
             obj.save()
             return redirect('account_detail', pk)
@@ -138,7 +137,7 @@ def add_foto(request, pk):
 def change_foto(request, pk, image_pk):
     image = get_object_or_404(Image, owner_id=pk, pk=image_pk)
     if request.method == 'POST':
-        form = ImageForm(request.POST, instance=image)
+        form = ImageForm(request.POST, request.FILES, instance=image)
         if form.is_valid():
             form.save()
             return redirect('account_detail', request.user.pk)

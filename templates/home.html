@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active"></li>
+{% endblock %}
+
+{% block content %}
+  <table class="table">
+      <tbody>
+        {% for target in targets %}
+        {% if target.follower.id == user.id %}
+        {% for post in posts %}
+          <tr>
+              {% if target.target.id == post.creator.id %}
+            <td>
+                {{ post.creator }}
+            </td>
+            <td>
+             <em>{{ post.message }}</em>
+            </td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+      </tbody>
+  </table>
+{% endblock %}

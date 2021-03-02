@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block breadcrumb %}
+  <li class="breadcrumb-item active">{{ post.creator }}</li>
+  <li class="breadcrumb-item active"></li>
+{% endblock %}
+
+{% block content %}
+  <table class="table">
+      <tbody>
+          <tr>
+            <td>
+                {{ post.creator }}
+            </td>
+            <td>
+             <em>{{ post.message }}</em>
+            </td>
+            <td>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Like">
+                </form>
+                <a href="#">{{ post.likes }}</a>
+            </td>
+          </tr>
+      </tbody>
+  </table>
+{% endblock %}

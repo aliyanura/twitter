@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}{{ owner.username }}'s page {% endblock %}
+
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Smoker's Twitter</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'wall_posts' owner.pk %}">
+        {{ owner.username }}'s wall
+    </a></li>
+    <li class="breadcrumb-item active">
+      <form method="post">
+        {% csrf_token %}
+        <a href="{% url 'follow' owner.pk %}"> Follow </a>
+        <input type="submit" value="OK">
+      </form></li>
+    
+{% endblock %}
+
+{% block content %}
+  <table class="table">
+      <tbody>
+          <p></p>
+          <!-- {{ owner.posts.all }} -->
+          {{ wall.comments.creator }}
+        {% for post in owner.posts.all %}
+          <p>
+            {{ post.creator }}
+          </p>
+            {{ post.message }}
+          <p>
+            {{ post.created_at }}
+          </p>
+          <p>
+            {{ post.likes }}
+          </p>
+          <tr>
+            <td>
+            </td>
+            <td>
+             <em>{{ wall.description }}</em>
+            </td>
+          </tr>
+        {% endfor %}
+        {% for comment in wall.comments.all %}
+            {{ comment }}
+        {% endfor %}
+        after loop
+      </tbody>
+  </table>
+{% endblock %}
